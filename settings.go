@@ -8,6 +8,7 @@ type DeskSettings interface {
 	IconTheme() string
 	BorderButtonPosition() string
 	ClockFormatting() string
+	MaximizeFullscreen() bool
 	NarrowWidgetPanel() bool
 	NarrowLeftLauncher() bool
 

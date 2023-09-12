@@ -1,8 +1,9 @@
 package test
 
 import (
-	"fyne.io/fyne/v2"
 	"fyshos.com/fynedesk"
+
+	"fyne.io/fyne/v2"
 )
 
 // Settings is a simple struct for managing settings within our tests
@@ -16,6 +17,7 @@ type Settings struct {
 	launcherDisableTaskbar bool
 	borderButtonPosition   string
 	clockFormatting        string
+	maximiseFullscreen     bool
 
 	moduleNames []string
 
@@ -120,6 +122,14 @@ func (s *Settings) ModuleNames() []string {
 // SetModuleNames supports configuring the modules that should be loaded
 func (s *Settings) SetModuleNames(mods []string) {
 	s.moduleNames = mods
+}
+
+func (s *Settings) MaximizeFullscreen() bool {
+	return s.maximiseFullscreen
+}
+
+func (s *Settings) SetMaximizeFullscreen(full bool) {
+	s.maximiseFullscreen = full
 }
 
 // NarrowLeftLauncher returns true when the user requested a narrow launcher bar on the left.

@@ -20,6 +20,7 @@ type deskSettings struct {
 	launcherZoomScale      float32
 	borderButtonPosition   string
 	clockFormatting        string
+	maximizeFullscreen     bool
 
 	modifier    fyne.KeyModifier
 	moduleNames []string
@@ -64,6 +65,10 @@ func (d *deskSettings) KeyboardModifier() fyne.KeyModifier {
 
 func (d *deskSettings) ModuleNames() []string {
 	return d.moduleNames
+}
+
+func (d *deskSettings) MaximizeFullscreen() bool {
+	return d.maximizeFullscreen
 }
 
 func (d *deskSettings) NarrowWidgetPanel() bool {
@@ -168,6 +173,12 @@ func (d *deskSettings) setModuleNames(names []string) {
 	d.apply()
 }
 
+func (d *deskSettings) setMaximizeFullscreen(full bool) {
+	d.maximizeFullscreen = full
+	fyne.CurrentApp().Preferences().SetBool("maximizeFullscreen", full)
+	d.apply()
+}
+
 func (d *deskSettings) setNarrowLeftLauncher(narrow bool) {
 	d.narrowLeftLauncher = narrow
 	fyne.CurrentApp().Preferences().SetBool("launchernarrowleft", narrow)
@@ -239,6 +250,7 @@ func (d *deskSettings) load() {
 		d.moduleNames = strings.Split(moduleNames, "|")
 	}
 	d.modifier = fyne.KeyModifier(fyne.CurrentApp().Preferences().IntWithFallback("keyboardmodifier", int(fyne.KeyModifierSuper)))
+	d.maximizeFullscreen = fyne.CurrentApp().Preferences().Bool("maximizeFullscreen")
 	d.narrowLeftLauncher = fyne.CurrentApp().Preferences().Bool("launchernarrowleft")
 	d.narrowPanel = fyne.CurrentApp().Preferences().Bool("narrowpanel")
 

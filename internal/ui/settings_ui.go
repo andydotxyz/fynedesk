@@ -89,6 +89,9 @@ func (d *settingsUI) loadAppearanceScreen() fyne.CanvasObject {
 	clockLabel := widget.NewLabelWithStyle("Clock Format", fyne.TextAlignCenter, fyne.TextStyle{Bold: true})
 	clockFormat := &widget.RadioGroup{Options: []string{"12h", "24h"}, Required: true, Horizontal: true}
 	clockFormat.SetSelected(d.settings.ClockFormatting())
+	fullLabel := widget.NewLabelWithStyle("Maximize", fyne.TextAlignCenter, fyne.TextStyle{Bold: true})
+	maximizeFull := widget.NewCheck("Maximize windows full screen", nil)
+	maximizeFull.Checked = d.settings.MaximizeFullscreen()
 
 	layoutLabel := widget.NewLabelWithStyle("Layout", fyne.TextAlignCenter, fyne.TextStyle{Bold: true})
 	narrowBar := widget.NewCheck("Narrow Side App Bar", nil)
@@ -115,10 +118,11 @@ func (d *settingsUI) loadAppearanceScreen() fyne.CanvasObject {
 
 	bg := container.NewBorder(nil, nil, bgLabel, bgButtons, bgPath)
 	time := container.NewBorder(nil, nil, clockLabel, clockFormat)
+	full := container.NewBorder(nil, nil, fullLabel, maximizeFull)
 	lay := container.NewBorder(nil, nil, layoutLabel,
 		container.NewGridWithColumns(2, narrowBar, narrowWidget))
 	border := container.NewBorder(nil, nil, borderButtonLabel, borderButton)
-	top := container.NewVBox(bg, time, lay, border)
+	top := container.NewVBox(bg, time, full, lay, border)
 
 	themeFormLabel := widget.NewLabelWithStyle("Icon Theme", fyne.TextAlignCenter, fyne.TextStyle{Bold: true})
 	themeCurrent := container.NewHBox(layout.NewSpacer(), themeLabel, themeIcons)
@@ -129,6 +133,7 @@ func (d *settingsUI) loadAppearanceScreen() fyne.CanvasObject {
 			d.settings.setBackground(bgPath.Text)
 			d.settings.setIconTheme(themeLabel.Text)
 			d.settings.setClockFormatting(clockFormat.Selected)
+			d.settings.setMaximizeFullscreen(maximizeFull.Checked)
 			d.settings.setBorderButtonPosition(borderButton.Selected)
 			d.settings.setNarrowLeftLauncher(narrowBar.Checked)
 			d.settings.setNarrowWidgetPanel(narrowWidget.Checked)

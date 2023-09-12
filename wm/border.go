@@ -40,11 +40,7 @@ func NewBorder(win fynedesk.Window, icon fyne.Resource, canMaximize bool) *Borde
 	}
 
 	max := &widget.Button{Icon: wmTheme.MaximizeIcon, Importance: widget.LowImportance, OnTapped: func() {
-		if win.Maximized() {
-			win.Unmaximize()
-		} else {
-			win.Maximize()
-		}
+		maxOrFull(win)
 	}}
 
 	if win.Maximized() {
@@ -112,11 +108,7 @@ type Border struct {
 
 // DoubleTapped is called when the user double taps a frame, it toggles the maximised state.
 func (c *Border) DoubleTapped(*fyne.PointEvent) {
-	if c.win.Maximized() {
-		c.win.Unmaximize()
-		return
-	}
-	c.win.Maximize()
+	maxOrFull(c.win)
 }
 
 func (c *Border) prepend(obj fyne.CanvasObject) {
@@ -137,11 +129,7 @@ func (c *Border) showMenu(from fyne.CanvasObject) {
 	title := fyne.NewMenuItem(name, func() {})
 	title.Disabled = true
 	max := fyne.NewMenuItem("Maximize", func() {
-		if c.win.Maximized() {
-			c.win.Unmaximize()
-		} else {
-			c.win.Maximize()
-		}
+		maxOrFull(c.win)
 	})
 	if c.win.Maximized() {
 		max.Checked = true
@@ -160,8 +148,11 @@ func (c *Border) showMenu(from fyne.CanvasObject) {
 			c.win.Close()
 		}))
 
-	pos := c.win.Position()
-	fynedesk.Instance().ShowMenuAt(menu, pos.Add(from.Position()))
+	pos := c.win.Position().Add(from.Position())
+	if fynedesk.Instance().Settings().BorderButtonPosition() != "Right" {
+		pos = pos.SubtractXY(wmTheme.WidgetPanelWidth-from.Size().Width, 0)
+	}
+	fynedesk.Instance().ShowMenuAt(menu, pos)
 }
 
 func (c *Border) makeDesktopMenu() *fyne.MenuItem {
@@ -248,4 +239,19 @@ func (r *coloredBoxRenderer) Refresh() {
 
 	r.b.title.Color = theme.ForegroundColor()
 	r.b.content.Refresh()
+}
+
+func maxOrFull(w fynedesk.Window) {
+	if fynedesk.Instance().Settings().MaximizeFullscreen() {
+		if w.Fullscreened() {
+			w.Unfullscreen()
+		} else {
+			w.Fullscreen()
+		}
+	}
+	if w.Maximized() {
+		w.Unmaximize()
+	} else {
+		w.Maximize()
+	}
 }
