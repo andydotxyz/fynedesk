@@ -30,6 +30,8 @@ For a full desktop experience you will also need the following external tools in
 - `xbacklight` or `brightnessctl` for laptop brightness
 - `connman-gtk` is currently used for configuring Wi-Fi network settings
 - `compton` for compositor support
+- `polkitd` for authentication support
+- `pkexec` is required for software update management
 
 The desktop does work without the runtime dependencies but the experience will be degraded.
 
