@@ -8,4 +8,5 @@ func init() {
 	fynedesk.RegisterModule(batteryMeta)
 	fynedesk.RegisterModule(soundMeta)
 	fynedesk.RegisterModule(brightnessMeta)
+	fynedesk.RegisterModule(updateMeta)
 }
